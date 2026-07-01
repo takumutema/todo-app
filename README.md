@@ -1,25 +1,57 @@
 ```mermaid
 
 sequenceDiagram
+
     participant browser
     participant server
 
-    Note right of browser: User writes something into the text field and clicks the save button
+    Note right of browser: On the browser user writes something into the text field and clicks the save button
 
-    Note right of browser: An event handler is triggered on form submit and a callback function executed
-
-    Note right of browser: The callback function adds the new note to the notes list and renders the new notes list without triggering a reload 
-
-    Note right of browser: The callback function after rendering the new notes list sends the new note to the server as json
-
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
 
     activate server
-    Note left of server: The new note is added to the notes on server
-    Note left of server: Upon successfuly saving the note a success message is send as json to the browser
+    Note left of server: On the server the new note is saved 
 
-    server-->>browser: {"message":"note created"} (success message)
+    server-->>browser: 302 http code together with a redirect location
     deactivate server
 
-```
+    Note right of browser: Browser executes the 302 http code and initiate a redirect to the location from the server response
 
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+
+    activate server
+    server-->>browser: HTML document
+    deactivate server
+
+    Note right of browser: Browser begins to go through the HTML putting stuff on the screen
+
+    Note right of browser: Browser executes the HTML document from top to bottom
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+
+    activate server
+    server-->>browser: the css file (main.css)
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+
+    activate server
+    server-->>browser: the Javascript file (main.js)
+    deactivate server
+
+    Note right of browser: Browser execute the js code that fetched the notes in json from the server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+
+    activate server
+    server-->>browser: [{content: 'ao tanaka', date: '2026-06-30T14:30:49.599Z'}, ...]
+    deactivate server
+
+    Note right of browser: Upon receiving the json an event handler is triggered executeing the callback function that renders the notes
+
+
+
+
+
+
+```
