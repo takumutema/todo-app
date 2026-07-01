@@ -19,6 +19,7 @@ sequenceDiagram
     Note left of server: Upon successfuly saving the note a success message is send as json to the browser
 
     server-->>browser: {"message":"note created"} (success message)
+    deactivate server
 
 ```
 
